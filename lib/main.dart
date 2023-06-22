@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:wallpaper_app/screens/home/home_page.dart';
-import 'package:wallpaper_app/screens/home/home_provider.dart';
+import 'package:wallpaper_app/controllers/details_provider.dart';
+import 'package:wallpaper_app/controllers/favorite_provider.dart';
+
+import 'package:wallpaper_app/controllers/wallpaper_provider.dart';
+import 'package:wallpaper_app/utls/favorite_database.dart';
+import 'package:wallpaper_app/view/wallpaper_page.dart';
+
 
 void main() {
+
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => HomeProvider()),
+    Provider<FavoriteDatabase>(
+      create: (_) => FavoriteDatabase.instance,
+      dispose: (_, db) => db.closeDB(),
+    ),
+    ChangeNotifierProvider(create: (_) => WallpaperProvider()),
+    ChangeNotifierProvider(create: (_) => DetailsProvide()),
+    ChangeNotifierProvider(create: (_) => FavoriteProvider()),
   ], child: const MyApp()));
 }
 
@@ -20,8 +32,8 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (BuildContext context, Widget? child) {
-        return const MaterialApp(
-          home: HomePage(),
+        return  MaterialApp(
+          home: WallpaperHome(),
         );
       },
     );
