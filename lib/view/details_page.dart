@@ -57,7 +57,7 @@ class DetailScreen extends StatelessWidget {
                     colors: Colors.green,
                     onPressed: () {
                       print('save image button');
-                      //         detailProvider.downloadImage(id: photo!.id!,);
+                              detailProvider.downloadImage();
                     },
                   ),
                   SharedButton(
