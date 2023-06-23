@@ -1,4 +1,4 @@
-
+import 'dart:convert';
 
 class WallpaperModel {
   int? totalResults;
@@ -9,9 +9,6 @@ class WallpaperModel {
 
   WallpaperModel(
       {this.totalResults, this.page, this.perPage, this.photos, this.nextPage});
-
-
-
 
   WallpaperModel.fromJson(Map<String, dynamic> json) {
     totalResults = json['total_results'];
@@ -41,66 +38,41 @@ class WallpaperModel {
 
 class Photos {
   int? id;
-  int? width;
-  int? height;
-  String? url;
-  String? photographer;
-  String? photographerUrl;
-  int? photographerId;
-  String? avgColor;
-  Src? src;
-  bool? liked;
-  String? alt;
 
-  Photos(
-      {this.id,
-        this.width,
-        this.height,
-        this.url,
-        this.photographer,
-        this.photographerUrl,
-        this.photographerId,
-        this.avgColor,
-        this.src,
-        this.liked,
-        this.alt});
+  Src? src;
+
+  Photos({
+    this.id,
+    this.src,
+  });
+
+  Photos copyWith({int? id, Src? src}) {
+    return Photos(
+      id: id ?? this.id,
+      src: src ?? this.src,
+    );
+  }
 
   Photos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    width = json['width'];
-    height = json['height'];
-    url = json['url'];
-    photographer = json['photographer'];
-    photographerUrl = json['photographer_url'];
-    photographerId = json['photographer_id'];
-    avgColor = json['avg_color'];
-    src = json['src'] != null ? new Src.fromJson(json['src']) : null;
-    liked = json['liked'];
-    alt = json['alt'];
+
+    src = json['src'] != null ? Src.fromJson(json['src']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['width'] = this.width;
-    data['height'] = this.height;
-    data['url'] = this.url;
-    data['photographer'] = this.photographer;
-    data['photographer_url'] = this.photographerUrl;
-    data['photographer_id'] = this.photographerId;
-    data['avg_color'] = this.avgColor;
-    if (this.src != null) {
-      data['src'] = this.src!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+
+    if (src != null) {
+      data['src'] = src!.toJson();
     }
-    data['liked'] = this.liked;
-    data['alt'] = this.alt;
     return data;
   }
 }
 
 class Src {
-  bool isDownload =false;
-  bool isFavorite =false;
+  bool isDownload = false;
+  bool isFavorite = false;
   String? original;
   String? large2x;
   String? large;
@@ -111,17 +83,16 @@ class Src {
   String? tiny;
 
   Src(
-      {
-        required this.isDownload,
-        required this.isFavorite,
-        this.original,
-        this.large2x,
-        this.large,
-        this.medium,
-        this.small,
-        this.portrait,
-        this.landscape,
-        this.tiny});
+      {required this.isDownload,
+      required this.isFavorite,
+      this.original,
+      this.large2x,
+      this.large,
+      this.medium,
+      this.small,
+      this.portrait,
+      this.landscape,
+      this.tiny});
 
   Src.fromJson(Map<String, dynamic> json) {
     original = json['original'];

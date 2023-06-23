@@ -1,73 +1,88 @@
-
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:wallpaper_app/model/favorite_model.dart';
-
-
+import 'package:wallpaper_app/constant/favorite_fields.dart';
+import 'package:wallpaper_app/model/wallpaper_model.dart';
 
 class FavoriteDatabase {
-  static final FavoriteDatabase instance = FavoriteDatabase._int();
-  static Database? dataBase;
-  FavoriteDatabase._int();
+  static final FavoriteDatabase instance = FavoriteDatabase._init();
+
+  FavoriteDatabase._init();
+
+  Database? _database;
+
   Future<Database> get database async {
-    if (dataBase != null) return dataBase!;
-    dataBase = await _initDB('favorite.db');
-    return dataBase!;
+    if (_database != null) return _database!;
+
+    _database = await _initDB('favorite.db');
+    return _database!;
   }
 
+  /// Initialize database
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path, version: 1, onCreate: createDB);
+
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
-  Future createDB(Database db, int version) async {
-    const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    const imageUrlType = 'STRING NOT NULL';
+  ///  Creating database
+  Future<void> _createDB(Database db, int version) async {
     await db.execute('''
-    CREATE TABLE $favoriteTable (
-    ${FavoriteFields.id} $idType,
-    ${FavoriteFields.imageUrl} $imageUrlType
+    CREATE TABLE $tableFavorite ( 
+      ${FavoriteFields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${FavoriteFields.src} TEXT,
+      ${FavoriteFields.srcLarge} TEXT,
+      ${FavoriteFields.medium} TEXT,
+      ${FavoriteFields.large} TEXT,
+      ${FavoriteFields.tiny} TEXT,
+      ${FavoriteFields.original} TEXT,
+      ${FavoriteFields.large2x} TEXT,
+      ${FavoriteFields.portrait} TEXT,
+      ${FavoriteFields.small} TEXT,
+      ${FavoriteFields.landscape} TEXT
+      
     )
-    '''
+  ''').catchError((error) => print('this error ${error.toString()}'));
+  }
+
+  Future<Photos> create({required Photos photo}) async {
+    final db = await instance.database;
+    final id = await db.insert(tableFavorite, photo.toJson());
+    return photo.copyWith(id: id);
+  }
+
+  Future<Photos> readFavorite(int id) async {
+    final db = await instance.database;
+    final map = await db.query(tableFavorite,
+      columns: FavoriteFields.values,
+      where: '${FavoriteFields.id} = ?',
+      whereArgs: [id],
+    );
+    if (map.isNotEmpty) {
+      return Photos.fromJson(map.first);
+    } else {
+      throw Exception('not found');
+    }
+
+
+
+  }
+  Future <List<Photos>>readAllFavorite()async{
+    final db = await instance.database;
+    final result = await db.query(tableFavorite,
+    );
+    return result.map((json)=>Photos.fromJson(json)).toList();
+  }
+  Future <int> delete(int id)async{
+    final db = await instance.database;
+    return await db.delete(tableFavorite,
+      where: '${FavoriteFields.id} = ?',
+      whereArgs: [id],
     );
   }
-
-  Future<FavoriteModel> create(FavoriteModel favorite) async {
-     final db = await instance.database;
-
-    final id = await db.insert(favoriteTable, favorite.toJson());
-    return favorite.copy(id: id);
-  }
-  Future <FavoriteModel>readFavorite(int id)async{
-    final db = await instance.database;
-final maps =await db.query(
-  favoriteTable,
-  columns:FavoriteFields.values,
-  where: '${FavoriteFields.id} = ?',
-    whereArgs: [id]
-);
- if(maps.isNotEmpty){
-  return FavoriteModel.fromJson(maps.first);
-}else{
-  throw Exception('ID $id is not found');
-}
-  }
-
-  Future<List<FavoriteModel>> readAllFavorite() async {
-    final db = await instance.database;
-    final result = await db.query(favoriteTable);
-    return result.map((json) => FavoriteModel.fromJson(json)).toList();
-  }
-
-  Future <int> delete (int id)async{
-    final db = await instance.database;
-  return await db.delete(favoriteTable,where: '${FavoriteFields.id} = ?',whereArgs: [id]);
-  }
-
-
   Future closeDB() async {
     var db = await instance.database;
     db.close();
   }
+
 }

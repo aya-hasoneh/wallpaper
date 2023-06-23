@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:wallpaper_app/model/favorite_model.dart';
+import 'package:wallpaper_app/constant/colors.dart';
 import 'package:wallpaper_app/model/wallpaper_model.dart';
 import 'package:wallpaper_app/controllers/details_provider.dart';
 import 'package:wallpaper_app/controllers/favorite_provider.dart';
@@ -15,7 +15,6 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final detailProvider = Provider.of<DetailsProvide>(context);
-    final favoriteProvider = Provider.of<FavoriteProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -26,13 +25,13 @@ class DetailScreen extends StatelessWidget {
           },
           icon: const Icon(
             Icons.arrow_back_ios,
-            color: Colors.black,
+            color: AppColors.blackColor,
           ),
         ),
         elevation: 0,
         title: const Text(
           'Wallpapers',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: AppColors.blackColor,),
         ),
       ),
       body: Padding(
@@ -50,37 +49,51 @@ class DetailScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SharedButton(
-                    icon:  Icon(
-                      photo!.src!.isDownload != true?
-                      Icons.download:Icons.done,
+                    icon: Icon(
+                      photo!.src!.isDownload != true
+                          ? Icons.download
+                          : Icons.done,
                       color: Colors.white,
                     ),
                     colors: Colors.green,
                     onPressed: () {
                       print('save image button');
+                      /// check if click button or not
                       detailProvider.isDownloadImage(photos: photo!);
 
-                      detailProvider.downloadImage(photos:photo!);
+                      /// download image
+                      detailProvider.downloadImage(photos: photo!);
                     },
                   ),
                   SharedButton(
                     icon: Icon(
-                      photo!.src!.isFavorite ==true
+                      photo!.src!.isFavorite == true
                           ? Icons.favorite
                           : Icons.favorite_border,
-                      color: Colors.red,
+                      color: AppColors.redColor,
                     ),
                     colors: Colors.white,
                     onPressed: () async {
                       print('click on button');
-                      final imageUrl = photo!.photographerUrl;
-                      print('image url is $imageUrl');
-                      final favorite =
-                          FavoriteModel(id: photo!.id, imageUrl: imageUrl);
-                      await FavoriteDatabase.instance.create(favorite);
-
-                      await favoriteProvider.loadFavorites();
+                      /// check if click on favorite button
                       detailProvider.isFavorite(photos: photo!);
+                      final favorite = Photos(
+                          id: photo!.id!,
+                          src: Src(
+                            isDownload: false,
+                            isFavorite: false,
+                            large: photo!.src!.large,
+                            medium: photo!.src!.medium,
+                            small: photo!.src!.small,
+                            tiny: photo!.src!.tiny,
+                            landscape: photo!.src!.landscape,
+                            large2x: photo!.src!.large2x,
+                            portrait: photo!.src!.portrait,
+                          ));
+                      /// add favorite photo to favorite screen
+                      await FavoriteDatabase.instance.create(photo: favorite);
+
+
                     },
                   ),
                 ],

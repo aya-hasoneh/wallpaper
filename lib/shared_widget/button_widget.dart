@@ -6,7 +6,12 @@ class SharedButton extends StatelessWidget {
   Color? colors;
   VoidCallback? onPressed;
 
-  SharedButton({Key? key,required this.icon,required this.colors,required this.onPressed}) : super(key: key);
+  SharedButton(
+      {Key? key,
+      required this.icon,
+      required this.colors,
+      required this.onPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +20,16 @@ class SharedButton extends StatelessWidget {
       child: Container(
         height: 50.h,
         width: 100.w,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: colors,boxShadow: [
-          BoxShadow(
-              color: Colors.grey.shade600,
-              spreadRadius: 1,
-              blurRadius: 15,
-              offset: const Offset(0, 5)
-          )
-        ]),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: colors,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey.shade600,
+                  spreadRadius: 1,
+                  blurRadius: 15,
+                  offset: const Offset(0, 5))
+            ]),
         child: icon,
       ),
     );

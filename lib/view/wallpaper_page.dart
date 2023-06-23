@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:wallpaper_app/constant/colors.dart';
 import 'package:wallpaper_app/controllers/wallpaper_provider.dart';
 import 'package:wallpaper_app/model/wallpaper_model.dart';
 import 'package:wallpaper_app/shared_widget/button_widget.dart';
@@ -14,25 +15,23 @@ class WallpaperHome extends StatelessWidget {
   Widget build(BuildContext context) {
     final wallpaperProvider = Provider.of<WallpaperProvider>(context);
 
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        /// floatingActionButton for favorite button
         floatingActionButton: SharedButton(
           icon: Icon(
             Icons.favorite,
             size: 25.h,
-            color: Colors.white,
+            color: AppColors.whiteColor,
           ),
-          colors: Colors.red,
-          onPressed: () async{
-
-
+          colors: AppColors.redColor,
+          onPressed: () async {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) =>  FavoritePage()),
+              MaterialPageRoute(builder: (context) => FavoritePage()),
             );
           },
         ),
@@ -41,7 +40,7 @@ class WallpaperHome extends StatelessWidget {
           elevation: 0,
           title: const Text(
             'Wallpapers',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color:AppColors.redColor),
           ),
         ),
         body: SingleChildScrollView(
@@ -49,12 +48,13 @@ class WallpaperHome extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(left: 5.w, right: 5.w),
               child: Column(children: [
-                const TextFormFeildWidget(),
+                 TextFormFeildWidget(controller: wallpaperProvider.searchController,text: 'Search...',),
+                /// Future Builder for get all wallpaper images
                 FutureBuilder<WallpaperModel>(
                   future: wallpaperProvider.fetchWallpapers(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator(color: AppColors.redColor,));
                     } else if (snapshot.hasError) {
                       print('Is there an error? ${snapshot.hasError}');
                       print('This is the error: ${snapshot.error}');
@@ -74,7 +74,9 @@ class WallpaperHome extends StatelessWidget {
                             ),
                             itemCount: snapshot.data!.photos!.length,
                             itemBuilder: (BuildContext context, index) {
-                              return InkWell(
+                              /// Image decoration in grid view
+                              return
+                                InkWell(
                                 onTap: () {
                                   Navigator.push(
                                     context,

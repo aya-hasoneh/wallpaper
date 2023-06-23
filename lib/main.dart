@@ -27,12 +27,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// ScreenUtilInt --> I use it for make the app responsive
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (BuildContext context, Widget? child) {
-        return MaterialApp(
+        return MaterialApp(debugShowCheckedModeBanner: false,
           home: WallpaperHome(),
         );
       },

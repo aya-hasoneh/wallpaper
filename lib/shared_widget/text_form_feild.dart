@@ -4,8 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:wallpaper_app/controllers/wallpaper_provider.dart';
 
 class TextFormFeildWidget extends StatelessWidget {
-
-  const TextFormFeildWidget({Key? key}) : super(key: key);
+TextEditingController controller;
+String text;
+   TextFormFeildWidget({Key? key,required this.controller,required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +15,9 @@ class TextFormFeildWidget extends StatelessWidget {
     return  Padding(
       padding:  EdgeInsets.only(top: 20.h,bottom: 20.h),
       child: TextFormField(
-        controller: wallpaperProvider.searchController,
+        controller: controller,
         decoration: InputDecoration(
-          labelText: 'Search...',
+          labelText: text,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
