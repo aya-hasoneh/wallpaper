@@ -99,6 +99,8 @@ class Photos {
 }
 
 class Src {
+  bool isDownload =false;
+  bool isFavorite =false;
   String? original;
   String? large2x;
   String? large;
@@ -109,7 +111,10 @@ class Src {
   String? tiny;
 
   Src(
-      {this.original,
+      {
+        required this.isDownload,
+        required this.isFavorite,
+        this.original,
         this.large2x,
         this.large,
         this.medium,

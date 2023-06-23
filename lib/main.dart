@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpaper_app/controllers/details_provider.dart';
@@ -7,7 +8,6 @@ import 'package:wallpaper_app/controllers/favorite_provider.dart';
 import 'package:wallpaper_app/controllers/wallpaper_provider.dart';
 import 'package:wallpaper_app/utls/favorite_database.dart';
 import 'package:wallpaper_app/view/wallpaper_page.dart';
-
 
 void main() {
 
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (BuildContext context, Widget? child) {
-        return  MaterialApp(
+        return MaterialApp(
           home: WallpaperHome(),
         );
       },

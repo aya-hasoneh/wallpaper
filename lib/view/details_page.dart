@@ -50,33 +50,37 @@ class DetailScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SharedButton(
-                    icon: const Icon(
-                      Icons.download,
+                    icon:  Icon(
+                      photo!.src!.isDownload != true?
+                      Icons.download:Icons.done,
                       color: Colors.white,
                     ),
                     colors: Colors.green,
                     onPressed: () {
                       print('save image button');
-                              detailProvider.downloadImage();
+                      detailProvider.isDownloadImage(photos: photo!);
+
+                      detailProvider.downloadImage(photos:photo!);
                     },
                   ),
                   SharedButton(
                     icon: Icon(
-                      detailProvider.isFavorite
+                      photo!.src!.isFavorite ==true
                           ? Icons.favorite
                           : Icons.favorite_border,
                       color: Colors.red,
                     ),
                     colors: Colors.white,
-                    onPressed: () async{
+                    onPressed: () async {
                       print('click on button');
                       final imageUrl = photo!.photographerUrl;
                       print('image url is $imageUrl');
-                      final favorite = FavoriteModel(id: photo!.id, imageUrl: imageUrl);
+                      final favorite =
+                          FavoriteModel(id: photo!.id, imageUrl: imageUrl);
                       await FavoriteDatabase.instance.create(favorite);
 
                       await favoriteProvider.loadFavorites();
-                      detailProvider.isFavoriteWallPaper();
+                      detailProvider.isFavorite(photos: photo!);
                     },
                   ),
                 ],

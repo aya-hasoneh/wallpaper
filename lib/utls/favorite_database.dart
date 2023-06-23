@@ -35,10 +35,7 @@ class FavoriteDatabase {
 
   Future<FavoriteModel> create(FavoriteModel favorite) async {
      final db = await instance.database;
-    // final json = favorite.toJson();
-    // final columns = '${FavoriteFields.imageUrl}';
-    // final values = '${json[FavoriteFields.imageUrl]}';
-    // final id = await db.rawInsert('INSERT INTO table_name ($columns) VALUES ($values)');
+
     final id = await db.insert(favoriteTable, favorite.toJson());
     return favorite.copy(id: id);
   }
@@ -50,7 +47,7 @@ final maps =await db.query(
   where: '${FavoriteFields.id} = ?',
     whereArgs: [id]
 );
-if(maps.isNotEmpty){
+ if(maps.isNotEmpty){
   return FavoriteModel.fromJson(maps.first);
 }else{
   throw Exception('ID $id is not found');
@@ -62,10 +59,13 @@ if(maps.isNotEmpty){
     final result = await db.query(favoriteTable);
     return result.map((json) => FavoriteModel.fromJson(json)).toList();
   }
+
   Future <int> delete (int id)async{
     final db = await instance.database;
-return await db.delete(favoriteTable,where: '${FavoriteFields.id} = ?',whereArgs: [id]);
+  return await db.delete(favoriteTable,where: '${FavoriteFields.id} = ?',whereArgs: [id]);
   }
+
+
   Future closeDB() async {
     var db = await instance.database;
     db.close();

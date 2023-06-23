@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpaper_app/controllers/favorite_provider.dart';
+import 'package:wallpaper_app/model/wallpaper_model.dart';
 
 class FavoritePage extends StatelessWidget {
-  const FavoritePage({Key? key}) : super(key: key);
+   FavoritePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +25,23 @@ class FavoritePage extends StatelessWidget {
           },
         ),
       ),
-      body: GridView.builder(  gridDelegate:
-      const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
+      body: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
         itemCount: favoriteProvider.favorites.length,
         itemBuilder: (context, index) {
           final favorite = favoriteProvider.favorites[index];
           return ListTile(
-            title: Image.network(favorite.imageUrl! ?? ''),
+            title: Image.network(favorite.imageUrl! ),
             // You can display the favorite image here or customize the UI as desired
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.red,
         onPressed: () {
           favoriteProvider.loadFavorites(); // Reload favorites
         },
@@ -48,4 +50,3 @@ class FavoritePage extends StatelessWidget {
     );
   }
 }
-
